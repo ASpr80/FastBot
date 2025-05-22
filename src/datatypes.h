@@ -10,6 +10,13 @@ enum FB_FileType {
     FB_VOICE,
 };
 
+#ifdef FB_WITH_LOCATION
+struct FB_Location {
+  String &latitude;
+  String &longitude;
+};
+#endif
+
 struct FB_msg {
     String& userID;     // ID юзера
     String& username;   // ник (в API это first_name)
@@ -32,6 +39,13 @@ struct FB_msg {
     String& first_name; // имя
     String& last_name;  // фамилия
     int32_t ID;         // ID сообщения
+
+    int32_t update_id;  // id апдейта
+    String& query_id;   // id query
+
+    #ifdef FB_WITH_LOCATION
+    FB_Location location;
+    #endif
     
     // вся информация одной строкой
     String toString() {
@@ -80,6 +94,16 @@ struct FB_msg {
         s += F("unix: ");
         s += unix;
         s += '\n';
+
+        #ifdef FB_WITH_LOCATION
+        s += F("location: ");
+        s += F("lat=");
+        s += location.latitude;
+        s += F(", lon=");
+        s += location.longitude;
+        s += '\n';
+        #endif
+
         return s;
     }
 };

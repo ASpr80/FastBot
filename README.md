@@ -1,9 +1,13 @@
 [![latest](https://img.shields.io/github/v/release/GyverLibs/FastBot.svg?color=brightgreen)](https://github.com/GyverLibs/FastBot/releases/latest/download/FastBot.zip)
+[![PIO](https://badges.registry.platformio.org/packages/gyverlibs/library/FastBot.svg)](https://registry.platformio.org/libraries/gyverlibs/FastBot)
 [![Foo](https://img.shields.io/badge/Website-AlexGyver.ru-blue.svg?style=flat-square)](https://alexgyver.ru/)
-[![Foo](https://img.shields.io/badge/%E2%82%BD$%E2%82%AC%20%D0%9D%D0%B0%20%D0%BF%D0%B8%D0%B2%D0%BE-%D1%81%20%D1%80%D1%8B%D0%B1%D0%BA%D0%BE%D0%B9-orange.svg?style=flat-square)](https://alexgyver.ru/support_alex/)
+[![Foo](https://img.shields.io/badge/%E2%82%BD%24%E2%82%AC%20%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C-%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B0-orange.svg?style=flat-square)](https://alexgyver.ru/support_alex/)
 [![Foo](https://img.shields.io/badge/README-ENGLISH-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/GyverLibs/FastBot?_x_tr_sl=ru&_x_tr_tl=en)  
 
 [![Foo](https://img.shields.io/badge/ПОДПИСАТЬСЯ-НА%20ОБНОВЛЕНИЯ-brightgreen.svg?style=social&logo=telegram&color=blue)](https://t.me/GyverLibs)
+
+|⚠️⚠️⚠️<br>**Появилась [FastBot2](https://github.com/GyverLibs/FastBot2) - более лёгкая, быстрая и гораздо более универсальная версия библиотеки!**<br>⚠️⚠️⚠️|
+| --- |
 
 # FastBot
 Многофункциональная быстрая библиотека для телеграм бота на esp8266/esp32
@@ -30,10 +34,24 @@ ESP8266 (SDK v2.6+), ESP32
 ## Создание и настройка бота
 - [Инструкция как создать и настроить Telegram бота](https://kit.alexgyver.ru/tutorials/telegram-basic/)
 - Если бот у вас уже есть, убедитесь что он *не в webhook режиме* (отключен по умолчанию), иначе esp не сможет принимать сообщения!
-- Для того, чтобы бот читал все сообщения в группе (а не только команды), нужно отключить параметр *Group Privacy* в настройках бота *Bot Settings* в чате с *@BotFather*. Данный параметр включен по умолчанию!
-- Для полноценной работы в группе бота нужно сделать администратором.
+- Для того, чтобы бот читал все сообщения в группе (а не только `/команды`), нужно отключить параметр *Group Privacy* в настройках бота *Bot Settings* в чате с *@BotFather*. Данный параметр включен по умолчанию!
+- Для полноценной работы в группе (супергруппе) бота нужно сделать администратором!
 
-### Дополнительно
+## Ограничения
+### Лимиты Telegram
+Телеграм устанавливает следующие лимиты на **отправку** сообщений ботом ([документация](https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this))
+- В чат: не чаще раза в секунду. *Отправлять чаще можно, но сообщение может не дойти*
+- В группу: не чаще 20 сообщений в минуту
+- Суммарный лимит: не чаще 30 сообщений в секунду
+- Бот может читать сообщения, с момента отправки которых прошло меньше 24 часов
+- Бот не может писать в личку другому боту
+- Бот [не видит](https://core.telegram.org/bots/faq#why-doesn-39t-my-bot-see-messages-from-other-bots) сообщения от других ботов в группе
+
+### Прочее
+- Телеграм разделяет текст на несколько сообщений, если длина текста превышает ~4000 символов! Эти сообщения будут иметь разный messageID в чате
+- При ответе на сообщение библиотека парсит текст исходного сообщения, а не ответа
+
+## Вывод графики
 Используйте библиотеку [CharDisplay](https://github.com/GyverLibs/CharDisplay) для вывода графиков и рисования в чате!  
 
 ![](https://github.com/GyverLibs/CharDisplay/blob/main/docs/plots.png)
@@ -85,6 +103,7 @@ ESP8266 (SDK v2.6+), ESP32
     - [Оформление текста](#textmode)
     - [Отправка файлов](#files)
     - [Скачивание файлов](#download)
+    - [Местоположение](#location)
     - [Всякие трюки](#tricks)
 - [Версии](#versions)
 - [Баги и обратная связь](#feedback)
@@ -101,12 +120,14 @@ ESP8266 (SDK v2.6+), ESP32
     - Распаковать и положить в *Документы/Arduino/libraries/*
     - (Arduino IDE) автоматическая установка из .zip: *Скетч/Подключить библиотеку/Добавить .ZIP библиотеку…* и указать скачанный архив
 - Читай более подробную инструкцию по установке библиотек [здесь](https://alexgyver.ru/arduino-first/#%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA)
+
 ### Обновление
 - Рекомендую всегда обновлять библиотеку: в новых версиях исправляются ошибки и баги, а также проводится оптимизация и добавляются новые фичи
 - Через менеджер библиотек IDE: найти библиотеку как при установке и нажать "Обновить"
 - Вручную: **удалить папку со старой версией**, а затем положить на её место новую. "Замену" делать нельзя: иногда в новых версиях удаляются файлы, которые останутся при замене и могут привести к ошибкам!
 
 <a id="init"></a>
+
 ## Инициализация
 ```cpp
 FastBot bot;
@@ -114,6 +135,7 @@ FastBot bot(токен); // с указанием токена
 ```
 
 <a id="docs"></a>
+
 ## Документация
 ```cpp
 // ============== НАСТРОЙКИ ==============
@@ -160,6 +182,11 @@ uint8_t sendSticker(String stickerID, String id);
 // ответить на callback текстом (text) и режимом (alert): FB_NOTIF - уведомление в чате, FB_ALERT - окно с кнопкой ОК
 uint8_t answer(String text, bool alert);
 
+// не отвечать автоматически на query этого апдейта
+void noAnswer();
+
+//отправить уведомление о том, что бот печатает сообщение
+uint8_t sendTyping(const String& id);
 
 // =============== УДАЛЕНИЕ ===============
 // удалить сообщение с id (msgid) в указанном в setChatID чате ИЛИ передать id чата
@@ -357,11 +384,14 @@ String FB_64str(int64_t id);        // перевод из int64_t в String
 #define FB_NO_URLENCODE     // отключить конвертацию urlencode для исходящих сообщений (чуть ускорит программу)
 #define FB_NO_OTA           // отключить поддержку OTA обновлений из чата
 #define FB_DYNAMIC          // включить динамический режим: библиотека дольше выполняет запрос, но занимает на 10 кб меньше памяти в SRAM
+#define FB_WITH_LOCATION    // включить дополнительное поле location (содержащее широту и долготу) в сообщении (см примеры location и sunPosition)
 ```
 
 <a id="usage"></a>
+
 ## Использование
 <a id="send"></a>
+
 ## Отправка сообщений
 Для отправки в чат (сообщения, стикеры, меню и так далее) обязательно должен быть указан ID чата, в который будет осуществляться отправка. Можно указать 
 несколько ID через запятую, в пределах одной строки. Есть два способа указать ID:
@@ -380,15 +410,8 @@ bot.sendMessage("Hello!", "112233"); // уйдёт в "112233"
 ```
 > Примечание: Телеграм разделяет текст на несколько сообщений, если длина текста превышает ~4000 символов! Эти сообщения будут иметь разный messageID в чате.
 
-### Лимиты
-Телеграм устанавливает следующие лимиты на **отправку** сообщений ботом ([документация](https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this))
-- В чат: не чаще раза в секунду. *Отправлять чаще можно, но сообщение может не дойти*
-- В группу: не чаще 20 сообщений в минуту
-- Суммарный лимит: не чаще 30 сообщений в секунду
-
-Также бот может читать сообщения, с момента отправки которых прошло меньше 24 часов.
-
 <a id="inbox"></a>
+
 ## Парсинг сообщений
 Сообщения автоматически запрашиваются и читаются в `tick()`, при поступлении нового сообщения вызывается указанная функция-обработчик:
 - Создаём в скетче свою функцию вида `void функция(FB_msg& сообщение)`
@@ -411,12 +434,10 @@ bot.sendMessage("Hello!", "112233"); // уйдёт в "112233"
     - `String fileUrl` - адрес файла для загрузки
     - `bool OTA` - запрос на OTA обновление (получен .bin файл)
     - `uint32_t unix` - время сообщения
+    - `uint32_t update_id` - id апдейта
+    - `String query_id` - id query
 
 А также `String toString()` - вся информация из сообщения одной строкой, удобно для отладки (с версии 2.11)
-
-**Примечания:**
-- Телеграм разделяет текст на несколько сообщений, если длина текста превышает ~4000 символов! Эти сообщения будут иметь разный messageID в чате.
-- При ответе на сообщение библиотека парсит текст исходного сообщения, а не ответа
 
 ### Белый список
 В библиотеке реализован механизм белого списка: можно указать в `setChatID()` ID чата (или нескольких через запятую), сообщения из которого будут приниматься. 
@@ -740,6 +761,32 @@ void newMsg(FB_msg& msg) {
 }
 ```
 
+<a id="location"></a>
+## Местоположение
+При указанной настройке `#define FB_WITH_LOCATION` бот добавляет поле `location` в обрабатываемые сообщения (FB_msg):
+
+```cpp
+struct FB_Location {
+  String &latitude;
+  String &longitude;
+};
+```
+
+В случае если боту прислали географическое местоположение (location), то поля latitude/longitude
+заполняюися координатами из полученного ботом location:
+
+```cpp
+// обработчик сообщений
+void newMsg(FB_msg& msg) {
+  if (msg.location.latitude.length() > 0 && msg.location.longitude.length() > 0) {
+    bot.sendMessage("Lat: " + msg.location.latitude + ", Lon: " + msg.location.longitude, msg.chatID);
+  }
+}
+```
+
+См примеры `examples/location` и `examples/sunPosition`.
+
+
 <a id="tricks"></a>
 ## Трюки
 ### Перезагрузка
@@ -757,8 +804,9 @@ void message(FB_msg &msg) {
   if (msg.text == "restart") res = 1;
 }
 void loop() {
+  bot.tick();
   if (res) {
-    bot.tickManual();
+    bot.tickManual(); // Чтобы отметить сообщение прочитанным
     ESP.restart();
   }
 }
@@ -868,6 +916,7 @@ void newMsg(FB_msg& msg) {
 - v2.23: пофиксил источник реального времени на editMessage
 - v2.24: фикс отправки больших файлов https://github.com/GyverLibs/FastBot/pull/17
 - v2.25: добавил skipUpdates - пропуск непрочитанных сообщений
+- v2.26: фикс некорректного отображения цифр после русских букв https://github.com/GyverLibs/FastBot/pull/37
 
 <a id="feedback"></a>
 ## Баги и обратная связь
